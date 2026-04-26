@@ -1,0 +1,50 @@
+# ========================
+# Build outputs
+# ========================
+bin/
+obj/
+**/bin/
+**/obj/
+
+# ========================
+# Test results & reports
+# ========================
+TestResults/
+playwright-report/
+allure-results/
+allure-report/
+allure-api-report/
+screenshots/
+logs/
+
+# ========================
+# Logs
+# ========================
+*.log
+
+# ========================
+# Environment & secrets
+# ========================
+.env
+.env.*
+*.env
+appsettings.Development.json
+secrets.json
+
+# ========================
+# User / IDE files
+# ========================
+*.user
+*.suo
+.vscode/
+.DS_Store
+Thumbs.db
+*~
+
+# ========================
+# .NET extras
+# ========================
+*.dll
+*.exe
+*.cache
+*.pdb

@@ -1,0 +1,131 @@
+name: dotnet-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-and-publish-allure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set up Java for Allure
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Node.js for Allure CLI package
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore
+        run: dotnet restore QaAutomationDemoFramework.sln
+
+      - name: Build
+        run: dotnet build QaAutomationDemoFramework.sln --no-restore --configuration Release
+
+      - name: Install Playwright browser dependencies and Chromium
+        shell: pwsh
+        run: |
+          ./tests/PlaywrightTests/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+
+      - name: Start demo app
+        run: |
+          nohup dotnet run --project src/DemoApp/DemoApp.csproj --urls http://127.0.0.1:5078 > demoapp.log 2>&1 &
+          echo $! > demoapp.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:5078/api/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Demo app failed to start" >&2
+          cat demoapp.log || true
+          exit 1
+
+      - name: Clean old report folders
+        run: |
+          rm -rf allure-results allure-report
+          mkdir -p allure-results
+
+      - name: Run API tests
+        env:
+          API_BASE_URL: http://127.0.0.1:5078
+        run: dotnet test tests/ApiTests/ApiTests.csproj --no-build --configuration Release
+
+      - name: Copy API Allure results
+        if: always()
+        run: |
+          if [ -d tests/ApiTests/bin/Release/net8.0/allure-results ]; then
+            cp -R tests/ApiTests/bin/Release/net8.0/allure-results/. allure-results/
+          fi
+
+      - name: Run UI tests
+        env:
+          APP_BASE_URL: http://127.0.0.1:5078
+        run: dotnet test tests/PlaywrightTests/PlaywrightTests.csproj --no-build --configuration Release
+
+      - name: Copy UI Allure results and screenshots
+        if: always()
+        run: |
+          if [ -d tests/PlaywrightTests/bin/Release/net8.0/allure-results ]; then
+            cp -R tests/PlaywrightTests/bin/Release/net8.0/allure-results/. allure-results/
+          fi
+
+      - name: Install Allure CLI
+        if: always()
+        run: npm install -g allure-commandline
+
+      - name: Generate Allure HTML report
+        if: always()
+        run: |
+          if [ -d allure-results ] && [ "$(find allure-results -type f | wc -l)" -gt 0 ]; then
+            allure generate allure-results --clean -o allure-report
+          else
+            echo "No Allure results were found."
+          fi
+
+      - name: Upload Allure HTML report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: allure-report
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload raw Allure results and UI screenshots artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-and-screenshots
+          path: |
+            allure-results
+            tests/PlaywrightTests/bin/**/artifacts/screenshots
+            demoapp.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Stop demo app
+        if: always()
+        run: |
+          if [ -f demoapp.pid ]; then
+            kill $(cat demoapp.pid) || true
+          fi
