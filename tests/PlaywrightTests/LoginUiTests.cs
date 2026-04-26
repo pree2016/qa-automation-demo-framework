@@ -23,9 +23,9 @@ public class LoginUiTests
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            //Headless = true
-            Headless = false,
-            SlowMo = 500
+            Headless = true
+            //Headless = false,
+            //SlowMo = 500
         });
         _context = await _browser.NewContextAsync();
         _page = await _context.NewPageAsync();
