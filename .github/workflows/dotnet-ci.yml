@@ -81,6 +81,7 @@ jobs:
       - name: Run UI tests
         env:
           APP_BASE_URL: http://127.0.0.1:5078
+          HEADLESS: true
         run: dotnet test tests/PlaywrightTests/PlaywrightTests.csproj --no-build --configuration Release
 
       - name: Copy UI Allure results and screenshots

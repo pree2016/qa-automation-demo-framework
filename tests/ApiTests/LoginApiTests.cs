@@ -18,6 +18,8 @@ public class LoginApiTests
     }
 
     [Test]
+    [Category("API")]
+    [Category("Smoke")]
     [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.normal)]
     public async Task HealthEndpoint_ReturnsOk()
     {
@@ -32,6 +34,8 @@ public class LoginApiTests
     }
 
     [Test]
+    [Category("API")]
+    [Category("Regression")]
     [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
     public async Task LoginEndpoint_WithValidCredentials_ReturnsWelcomeMessage()
     {
@@ -49,6 +53,8 @@ public class LoginApiTests
     }
 
     [Test]
+    [Category("API")]
+    [Category("Negative")]
     [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
     public async Task LoginEndpoint_WithInvalidCredentials_ReturnsBadRequest()
     {

@@ -1,3 +1,18 @@
+<h1 align="center">QA Automation Demo Framework</h1>
+
+<p align="center">
+  End-to-end UI + API automation framework using Playwright, .NET, Allure & CI/CD
+</p>
+
+<p align="center">
+  <a href="https://github.com/pree2016/qa-automation-demo-framework/actions">
+    <img src="https://github.com/pree2016/qa-automation-demo-framework/actions/workflows/dotnet-ci.yml/badge.svg" alt="CI">
+  </a>
+  <img src="https://img.shields.io/badge/.NET-8-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Playwright-UI%20Tests-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Allure-Reports-orange?style=for-the-badge" />
+</p>
+
 # 🚀 QA Automation Demo Framework  
 *A production-grade QA automation showcase using .NET, Playwright, RestSharp, Allure, and GitHub Actions*
 
@@ -136,8 +151,8 @@ dotnet test tests/ApiTests/ApiTests.csproj
 
 ---
 
-## 🌐 UI Test Execution
-  
+## 🌐 UI Test Execution with Browser (headed mode)
+
 ### Linux / macOS
 ```bash
 dotnet build tests/PlaywrightTests/PlaywrightTests.csproj
@@ -147,7 +162,8 @@ pwsh tests/PlaywrightTests/bin/Debug/net8.0/playwright.ps1 install-deps chromium
 
 export APP_BASE_URL=http://localhost:5078
 
-dotnet test tests/PlaywrightTests/PlaywrightTests.csproj
+# local visible browser mode
+HEADLESS=false dotnet test tests/PlaywrightTests
 ```
 
 ### Windows Powershell
@@ -160,6 +176,14 @@ $env:APP_BASE_URL="http://localhost:5078"
 
 dotnet test tests/PlaywrightTests/PlaywrightTests.csproj
 ```
+
+### Run only smoke:
+
+dotnet test --filter TestCategory=Smoke
+
+### Run only UI:
+
+dotnet test --filter TestCategory=UI
 
 ---
 

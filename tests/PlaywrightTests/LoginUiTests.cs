@@ -23,9 +23,10 @@ public class LoginUiTests
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = true
+            //Headless = true
             //Headless = false,
             //SlowMo = 500
+            Headless = Environment.GetEnvironmentVariable("HEADLESS") != "false"
         });
         _context = await _browser.NewContextAsync();
         _page = await _context.NewPageAsync();
@@ -69,6 +70,9 @@ public class LoginUiTests
     }
 
     [Test]
+    [Retry(2)]
+    [Category("UI")]
+    [Category("Smoke")]
     [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.normal)]
     public async Task ValidLogin_ShowsWelcomeMessage()
     {
