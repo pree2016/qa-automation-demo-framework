@@ -81,7 +81,7 @@ README.md
 
 ## 🔐 Demo Credentials  
 
-| Field    | Value                  |
+| Field    | Value                |
 |----------|----------------------|
 | Email    | qa.user@example.com  |
 | Password | Password123!         |
