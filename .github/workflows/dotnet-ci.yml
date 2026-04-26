@@ -63,6 +63,7 @@ jobs:
       - name: Clean old report folders
         run: |
           rm -rf allure-results allure-report
+          find . -type d \( -name "allure-results" -o -name "allure-report" \) -prune -exec rm -rf {} +
           mkdir -p allure-results
 
       - name: Run API tests
@@ -92,6 +93,12 @@ jobs:
       - name: Install Allure CLI
         if: always()
         run: npm install -g allure-commandline
+
+      - name: Show Allure result files
+        if: always()
+        run: |
+          echo "Root allure-results:"
+          find allure-results -type f | sort
 
       - name: Generate Allure HTML report
         if: always()
