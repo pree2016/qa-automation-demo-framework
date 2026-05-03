@@ -16,7 +16,6 @@ allure-report/
 allure-api-report/
 **/allure-results/
 **/allure-report/
-screenshots/
 logs/
 
 # ========================
@@ -50,3 +49,6 @@ Thumbs.db
 *.exe
 *.cache
 *.pdb
+
+# Runtime screenshots
+docs/images/screenshots/
