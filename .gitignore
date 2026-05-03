@@ -50,5 +50,7 @@ Thumbs.db
 *.cache
 *.pdb
 
+# ========================
 # Runtime screenshots
+# ========================
 docs/images/screenshots/
