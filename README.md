@@ -106,6 +106,79 @@ Suggested local flow:
 
 ---
 
+## 🪟 Windows Setup
+
+Full local flow for Windows (PowerShell):
+
+### 1. Extract and Rename
+```powershell
+Expand-Archive -Path .\qa-automation-demo-framework.zip -DestinationPath .
+Rename-Item -Path .\qa-automation-demo-framework-main -NewName qa-automation-demo-framework
+cd qa-automation-demo-framework
+```
+
+### 2. Restore and Build
+```powershell
+dotnet restore QaAutomationDemoFramework.sln
+dotnet build QaAutomationDemoFramework.sln
+```
+
+### 3. Run Application
+```powershell
+dotnet run --project src\DemoApp\DemoApp.csproj --urls http://localhost:5078
+```
+*(Keep this terminal open)*
+
+### 4. Run Tests
+```powershell
+.\scripts\run-ui-tests-with-allure.ps1
+```
+
+#### 📝 Notes & Assumptions:
+- **SDK**: Assumes .NET 8 SDK is installed.
+- **Java**: Java (JRE) must be installed for Allure reports.
+- **ZIP Name**: Assumes the source is `qa-automation-demo-framework.zip`.
+- **Verification**: Manually verify `http://localhost:5078` is accessible before running tests.
+
+---
+
+## 🍎 macOS Setup
+
+Full local flow for macOS (Terminal):
+
+### 1. Extract and Rename
+```bash
+unzip qa-automation-demo-framework.zip
+mv qa-automation-demo-framework-main qa-automation-demo-framework
+cd qa-automation-demo-framework
+```
+
+### 2. Restore and Build
+```bash
+dotnet restore QaAutomationDemoFramework.sln
+dotnet build QaAutomationDemoFramework.sln
+```
+
+### 3. Run Application
+```bash
+dotnet run --project src/DemoApp/DemoApp.csproj --urls http://localhost:5078
+```
+*(Keep this terminal open)*
+
+### 4. Run Tests
+```bash
+chmod +x scripts/run-ui-tests-with-allure.sh
+./scripts/run-ui-tests-with-allure.sh
+```
+
+#### 📝 Notes & Assumptions:
+- **SDK**: Assumes .NET 8 SDK is installed.
+- **Java**: Java (JRE) must be installed for Allure reports.
+- **Permissions**: Scripts require `chmod +x` before execution.
+- **Verification**: Manually verify `http://localhost:5078` is accessible before running tests.
+
+---
+
 
 ## 🏁 Getting Started  
 
@@ -206,20 +279,25 @@ sudo npm install -g allure-commandline --save-dev
 ```
 
 ### Run Tests with Allure through scripts
-macOS:
+
+#### Windows (PowerShell)
+```powershell
+.\scripts\run-ui-tests-with-allure.ps1
+.\scripts\run-api-tests-with-allure.ps1
+```
+
+#### Ubuntu / macOS (PowerShell Core)
 ```bash
-bash scripts/run-api-tests-with-allure.sh
-bash scripts/run-ui-tests-with-allure.sh
+pwsh ./scripts/run-ui-tests-with-allure.ps1
+pwsh ./scripts/run-api-tests-with-allure.ps1
 ```
-Ubuntu:
-```powershell
-pwsh scripts/run-ui-tests-with-allure.ps1
-pwsh scripts/run-api-tests-with-allure.ps1
-```
-Windows PowerShell:
-```powershell
-./scripts/run-api-tests-with-allure.ps1
-./scripts/run-ui-tests-with-allure.ps1
+
+#### Ubuntu / macOS (Shell)
+```bash
+chmod +x scripts/run-ui-tests-with-allure.sh
+chmod +x scripts/run-api-tests-with-allure.sh
+./scripts/run-ui-tests-with-allure.sh
+./scripts/run-api-tests-with-allure.sh
 ```
 
 ### 📈 (Optional) Generate Report for only UI tests  
