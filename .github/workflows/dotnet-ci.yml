@@ -126,7 +126,8 @@ jobs:
           name: allure-results-and-screenshots
           path: |
             allure-results
-            tests/PlaywrightTests/bin/**/artifacts/screenshots
+            artifacts/screenshots
+            artifacts/videos
             demoapp.log
           if-no-files-found: warn
           retention-days: 14
