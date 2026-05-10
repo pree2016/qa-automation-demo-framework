@@ -16,6 +16,7 @@ allure-report/
 allure-api-report/
 **/allure-results/
 **/allure-report/
+artifacts/
 logs/
 
 # ========================
