@@ -112,7 +112,7 @@ public class LoginUiTests
         await _page.FillAsync("#password", "Password123!");
         await _page.ClickAsync("#loginButton");
 
-        await ExpectMessageContains("Welcome, QA Demo User!");
+        await ExpectMessageContains("Incorrect text, QA Demo User!");
     }
 
     [Test]
