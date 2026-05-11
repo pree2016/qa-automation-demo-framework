@@ -68,6 +68,91 @@ public class LoginApiTests
         Assert.That(response.Data, Is.Not.Null);
         Assert.That(response.Data!.Success, Is.False);
     }
+
+    [Test]
+    [Category("API")]
+    [Category("Negative")]
+    [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
+    public async Task LoginEndpoint_WithMissingEmail_ReturnsBadRequest()
+    {
+        var request = new RestRequest("/api/login", Method.Post);
+        request.AddJsonBody(new { Password = "Password123!" });
+
+        var response = await _client.ExecuteAsync(request);
+
+        AllureApi.AddTestParameter("Scenario", "Missing Email");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(response.Content ?? string.Empty, Does.Not.Contain("Welcome"));
+    }
+
+    [Test]
+    [Category("API")]
+    [Category("Negative")]
+    [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
+    public async Task LoginEndpoint_WithMalformedJson_ReturnsBadRequest()
+    {
+        var request = new RestRequest("/api/login", Method.Post);
+        request.AddStringBody("{ email: bad json <<<", ContentType.Json);
+
+        var response = await _client.ExecuteAsync(request);
+
+        AllureApi.AddTestParameter("Endpoint", "/api/login");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(response.Content ?? string.Empty, Does.Not.Contain("Welcome"));
+    }
+
+    [Test]
+    [Category("API")]
+    [Category("Negative")]
+    [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
+    public async Task LoginEndpoint_WithNullValues_ReturnsBadRequest()
+    {
+        var request = new RestRequest("/api/login", Method.Post);
+        request.AddJsonBody(new LoginRequest(null!, null!));
+
+        var response = await _client.ExecuteAsync(request);
+
+        AllureApi.AddTestParameter("Scenario", "Null Values");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(response.Content ?? string.Empty, Does.Not.Contain("Welcome"));
+    }
+
+    [Test]
+    [Category("API")]
+    [Category("Negative")]
+    [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
+    public async Task LoginEndpoint_WithEmptyRequestBody_ReturnsBadRequest()
+    {
+        var request = new RestRequest("/api/login", Method.Post);
+        request.AddStringBody(string.Empty, ContentType.Json);
+
+        var response = await _client.ExecuteAsync(request);
+
+        AllureApi.AddTestParameter("Scenario", "Empty Request Body");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(response.Content ?? string.Empty, Does.Not.Contain("Welcome"));
+    }
+
+    [Test]
+    [Category("API")]
+    [Category("Negative")]
+    [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
+    public async Task LoginEndpoint_WithMissingPassword_ReturnsBadRequest()
+    {
+        var request = new RestRequest("/api/login", Method.Post);
+        request.AddJsonBody(new { Email = "qa.user@example.com" });
+
+        var response = await _client.ExecuteAsync(request);
+
+        AllureApi.AddTestParameter("Scenario", "Missing Password");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(response.Content ?? string.Empty, Does.Not.Contain("Welcome"));
+    }
 }
 
 public record LoginRequest(string Email, string Password);

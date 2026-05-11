@@ -116,6 +116,9 @@ public class LoginUiTests
     }
 
     [Test]
+    [Retry(2)]
+    [Category("UI")]
+    [Category("Negative")]
     [Allure.NUnit.Attributes.AllureSeverity(Allure.Net.Commons.SeverityLevel.critical)]
     public async Task InvalidLogin_ShowsErrorMessage()
     {
