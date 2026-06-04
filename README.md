@@ -323,13 +323,18 @@ Open: http://localhost:8080
 
 ---
 
-## 🧹 Clean Reports  
-
+## 🧹 Clean Reports
+Clean the report and results before starting a fresh local test run
 ```bash
-rm -rf allure-results allure-report 
-rm -rf tests/ApiTests/bin/Debug/net8.0/allure-results 
+rm -rf allure-results allure-report artifacts
+rm -rf tests/ApiTests/bin/Debug/net8.0/allure-results
 rm -rf tests/PlaywrightTests/bin/Debug/net8.0/allure-results
+
 ```
+Explanation:
+- **allure-results** contains raw Allure result files.
+- **allure-report** contains generated HTML reports.
+- **artifacts** contains Playwright screenshots and videos captured during test execution.
 
 ---
 
@@ -351,11 +356,10 @@ Open: http://localhost:8080
 
 ---
 
-## 📸 Screenshots  
+## 📸 Screenshots
 
-- Stored under: `docs/images/screenshots`
 - Automatically captured on UI test failure
-- Attached to Allure report 
+- Attached to Allure report
 
 ---
 
